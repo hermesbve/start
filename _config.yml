@@ -3,3 +3,13 @@ title: "Start Page"
 description: "A personal browser start page with categorized links and smart search."
 lang: en
 search_placeholder: "Search locally or use /w, /img, /map, /r ..."
+
+# Theme colors — edit here, reflected everywhere
+colors:
+  background: "#121212"
+  text: "#e0e0e0"
+  container_bg: "#1e1e1e"
+  link: "#bb86fc"
+  link_hover: "#9f63f7"
+  border: "#333333"
+  search_bg: "#2c2c2c"
