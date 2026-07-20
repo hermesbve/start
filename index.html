@@ -1,0 +1,45 @@
+---
+# You don't need to edit this file, it's empty on purpose.
+# Edit theme's home layout instead if you wanna make some changes
+# See: https://jekyllrb.com/docs/themes/#overriding-theme-defaults
+layout: home
+author_profile: true
+header:
+  overlay_image: /assets/images/unsplash-image-1.jpg
+  overlay_filter: 0.4
+  caption: "Photo: Picsum"
+excerpt: "Exploring Jekyll layouts and image helpers with Minimal Mistakes."
+---
+
+{% if site.portfolio.size > 0 %}
+{% assign sorted_portfolio = site.portfolio | sort: 'sort_date' | reverse %}
+
+<h2>What I'm currently working on:</h2>
+
+<div class="entries-grid">
+  {% for item in sorted_portfolio limit:4 %}
+    <div class="grid__item">
+      <article class="archive__item">
+        {% if item.header.teaser %}
+          <div class="archive__item-teaser">
+            <a href="{{ item.url | relative_url }}">
+              <img src="{{ item.header.teaser | relative_url }}" alt="{{ item.title }}" loading="lazy">
+            </a>
+          </div>
+        {% endif %}
+        <h2 class="archive__item-title no_toc">
+          <a href="{{ item.url | relative_url }}">{{ item.title }}</a>
+        </h2>
+        {% if item.excerpt %}
+          <p class="archive__item-excerpt">{{ item.excerpt | markdownify | strip_html | truncate: 160 }}</p>
+        {% endif %}
+      </article>
+    </div>
+  {% endfor %}
+</div>
+
+<p style="margin-top: 1em;"><a href="/portfolio/" class="btn btn--primary">View Full Portfolio →</a></p>
+
+<hr style="margin: 2em 0;">
+
+{% endif %}
