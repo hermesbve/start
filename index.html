@@ -1,45 +1,201 @@
 ---
-# You don't need to edit this file, it's empty on purpose.
-# Edit theme's home layout instead if you wanna make some changes
-# See: https://jekyllrb.com/docs/themes/#overriding-theme-defaults
-layout: home
-author_profile: true
-header:
-  overlay_image: /assets/images/unsplash-image-1.jpg
-  overlay_filter: 0.4
-  caption: "Photo: Picsum"
-excerpt: "Exploring Jekyll layouts and image helpers with Minimal Mistakes."
+layout: none
+title: Startpagina
+lang: nl
 ---
 
-{% if site.portfolio.size > 0 %}
-{% assign sorted_portfolio = site.portfolio | sort: 'sort_date' | reverse %}
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Startpagina</title>
 
-<h2>What I'm currently working on:</h2>
+  <style>
+    :root {
+      --background-color: #121212;
+      --text-color: #e0e0e0;
+      --container-bg: #1e1e1e;
+      --link-color: #bb86fc;
+      --link-hover-color: #9f63f7;
+      --border-color: #333;
+      --search-bg: #2c2c2c;
+    }
 
-<div class="entries-grid">
-  {% for item in sorted_portfolio limit:4 %}
-    <div class="grid__item">
-      <article class="archive__item">
-        {% if item.header.teaser %}
-          <div class="archive__item-teaser">
-            <a href="{{ item.url | relative_url }}">
-              <img src="{{ item.header.teaser | relative_url }}" alt="{{ item.title }}" loading="lazy">
-            </a>
-          </div>
-        {% endif %}
-        <h2 class="archive__item-title no_toc">
-          <a href="{{ item.url | relative_url }}">{{ item.title }}</a>
-        </h2>
-        {% if item.excerpt %}
-          <p class="archive__item-excerpt">{{ item.excerpt | markdownify | strip_html | truncate: 160 }}</p>
-        {% endif %}
-      </article>
+    body {
+      background-color: var(--background-color);
+      color: var(--text-color);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 1rem;
+      box-sizing: border-box;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1200px;
+    }
+
+    #search-bar {
+      width: 100%;
+      padding: 0.75rem;
+      margin-bottom: 2rem;
+      background-color: var(--search-bg);
+      color: var(--text-color);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 1rem;
+      box-sizing: border-box;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+
+    #search-bar.has-text:focus {
+      border-color: var(--link-color);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem;
+    }
+
+    .column {
+      background-color: var(--container-bg);
+      padding: 1.5rem;
+      border-radius: 8px;
+    }
+
+    .column h2 {
+      margin-top: 0;
+      font-size: 1.2rem;
+      border-bottom: 2px solid var(--link-color);
+      padding-bottom: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .column ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .column li {
+      margin-bottom: 0.75rem;
+    }
+
+    .column a {
+      color: var(--link-color);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .column a:hover {
+      color: var(--link-hover-color);
+      text-decoration: underline;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <input
+      type="text"
+      id="search-bar"
+      placeholder="Zoek lokaal of gebruik /w, /img, /map, /r ..."
+    />
+
+    <div class="grid">
+      {% for col in site.data.links %}
+        <div class="column">
+          <h2>{{ col[0] }}</h2>
+          <ul>
+            {% for item in col[1] %}
+              <li>
+                <a href="{{ item.url }}" rel="noopener" target="_blank">{{ item.title }}</a>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endfor %}
     </div>
-  {% endfor %}
-</div>
+  </div>
 
-<p style="margin-top: 1em;"><a href="/portfolio/" class="btn btn--primary">View Full Portfolio →</a></p>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const searchBar = document.getElementById('search-bar');
+    const columns = document.querySelectorAll('.column');
 
-<hr style="margin: 2em 0;">
+    searchBar.focus();
 
-{% endif %}
+    searchBar.addEventListener('input', (e) => {
+      const searchTerm = e.target.value.toLowerCase();
+
+      if (e.target.value !== "") searchBar.classList.add('has-text');
+      else searchBar.classList.remove('has-text');
+
+      columns.forEach(column => {
+        const links = column.querySelectorAll('li');
+        let columnHasVisibleLinks = false;
+
+        links.forEach(li => {
+          const link = li.querySelector('a');
+          const title = link.textContent.toLowerCase();
+          const url = link.href.toLowerCase();
+
+          if (title.includes(searchTerm) || url.includes(searchTerm)) {
+            li.style.display = '';
+            columnHasVisibleLinks = true;
+          } else {
+            li.style.display = 'none';
+          }
+        });
+
+        column.style.display = columnHasVisibleLinks ? '' : 'none';
+      });
+    });
+
+    // Read search rules from _data/search.yml
+    const SEARCH_RULES = {{ site.data.search | jsonify }};
+
+    const findRule = (tag) => {
+      if (!tag) return SEARCH_RULES.find(r => r.default) || SEARCH_RULES[SEARCH_RULES.length - 1];
+      return SEARCH_RULES.find(r => (r.tag || '').toLowerCase() === tag.toLowerCase())
+        || (SEARCH_RULES.find(r => r.default) || SEARCH_RULES[SEARCH_RULES.length - 1]);
+    };
+
+    const buildUrl = (rawValue) => {
+      const value = rawValue.trim();
+      if (!value) return '';
+
+      if (value.startsWith('/')) {
+        const spaceIndex = value.indexOf(' ');
+        const tag = (spaceIndex === -1 ? value : value.slice(0, spaceIndex)).toLowerCase();
+        const query = (spaceIndex === -1 ? '' : value.slice(spaceIndex + 1)).trim();
+
+        const rule = findRule(tag);
+        if (!rule || !rule.template) return '';
+
+        return rule.template.replace('{query}', encodeURIComponent(query));
+      }
+
+      const rule = findRule(null);
+      if (!rule || !rule.template) return '';
+
+      return rule.template.replace('{query}', encodeURIComponent(value));
+    };
+
+    searchBar.addEventListener('keydown', (e) => {
+      if (e.key !== 'Enter') return;
+      const url = buildUrl(e.target.value);
+      if (url) window.location.href = url;
+    });
+  });
+</script>
+
+  </body>
+</html>

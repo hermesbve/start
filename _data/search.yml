@@ -1,0 +1,18 @@
+- tag: /w
+  default: false
+  template: "https://nl.wikipedia.org/wiki/Special:Search?search={query}"
+
+- tag: /img
+  default: false
+  template: "https://www.google.com/search?tbm=isch&q={query}"
+
+- tag: /map
+  default: false
+  template: "https://www.google.com/maps/search/{query}"
+
+- tag: /r
+  default: false
+  template: "https://www.reddit.com/search/?q={query}"
+
+- default: true
+  template: "https://www.google.com/search?q={query}"
