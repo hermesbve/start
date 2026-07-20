@@ -1,0 +1,5 @@
+# Site settings
+title: "Start Page"
+description: "A personal browser start page with categorized links and smart search."
+lang: en
+search_placeholder: "Search locally or use /w, /img, /map, /r ..."

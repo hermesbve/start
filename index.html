@@ -1,15 +1,14 @@
 ---
 layout: none
-title: Startpagina
-lang: nl
 ---
 
 <!DOCTYPE html>
-<html lang="nl">
+<html lang="{{ site.lang }}">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Startpagina</title>
+  <meta name="description" content="{{ site.description }}" />
+  <title>{{ site.title }}</title>
 
   <style>
     :root {
@@ -106,7 +105,7 @@ lang: nl
     <input
       type="text"
       id="search-bar"
-      placeholder="Zoek lokaal of gebruik /w, /img, /map, /r ..."
+      placeholder="{{ site.search_placeholder }}"
     />
 
     <div class="grid">
